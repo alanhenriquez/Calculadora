@@ -1,0 +1,142 @@
+
+
+
+
+:root {
+    --COLOR_1: #242e3a;
+    --COLOR_2: #2d4b6e;
+    --COLOR_3: #536983;
+    --COLOR_4: #8c5fac;
+    --COLOR_5: #ffffff;
+    --COLOR_6: #414d5c;
+    --COLOR_7: #e3e3e3;
+    --FONT_SIZE_1: 3.5vh;
+    --FONT_SIZE_2: 2.5vh;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Roboto1;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    float: left;
+    overflow: hidden;
+}
+
+.container .calculadora{
+    width: 100%;
+    height: 100%;
+    background: var(--COLOR_1);
+}
+
+.container .calculadora .pantalla{
+    width: 100%;
+    height: 20%;
+    background: var(--COLOR_3);
+    border-bottom-left-radius: 7vw;
+    border-bottom-right-radius: 7vw;
+    display: inline-block;
+}
+
+.container .calculadora .pantalla .expresion{
+    width: 100%;
+    height: 100%;
+    float: left;
+    overflow: hidden;
+}
+
+.container .calculadora .pantalla .expresion input{
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--COLOR_5);
+    font-size: var(--FONT_SIZE_1);
+    overflow: hidden;
+    overflow-x: auto;
+    text-align: end;
+    padding: 0vw 8vw;
+}
+
+.container .calculadora .pantalla .resultado {
+    width: 90%;
+    height: 10vh;
+    top: 0;
+    left: 50%;
+    float: left;
+    overflow: hidden;
+    position: relative;
+    border-radius: 10vw;
+    border: 1vh solid #242e3a;
+    transform: translate(-50%,-50%);
+    background: #f19916;
+    display: flex;
+    align-items: center;
+}
+
+.container .calculadora .pantalla .resultado .result {
+    width: 15%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.container .calculadora .pantalla .resultado .result .expresResult{
+    width: auto;
+    height: 100%;
+    color: var(--COLOR_7);
+    font-size: var(--FONT_SIZE_2);
+}
+
+.container .calculadora .botones {
+    width: 100%;
+    height: 80%;
+}
+
+.container .calculadora .botones .numeros{
+    width: 50%;
+    height: 100%;
+}
+
+.container .calculadora .botones .numeros .ajuste {
+    width: 100%;
+    height: auto;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1vw 0;
+}
+
+.container .calculadora .botones .numeros .ajuste .boton {
+    width: calc(100% / 3);
+    height: 100%;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .calculadora .botones .numeros .ajuste .boton .number{
+    width: 7vw;
+    height: 7vw;
+    background: var(--COLOR_6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--COLOR_5);
+    font-size: var(--FONT_SIZE_2);
+}
+
+
+
+

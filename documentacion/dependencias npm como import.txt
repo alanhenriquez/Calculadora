@@ -1,0 +1,326 @@
+Si deseas utilizar la opción de configurar un entorno de desarrollo adecuado para utilizar la sintaxis de módulos ES6 con la declaración import, aquí hay algunos pasos básicos para lograrlo:
+
+********** 1 - Asegúrate de tener Node.js y npm (Node Package Manager) instalados en tu sistema.
+
+
+
+********** 2 - En la raíz de tu proyecto, crea un archivo llamado package.json si aún no lo tienes. Puedes crearlo ejecutando el siguiente comando en la terminal o línea de comandos y siguiendo las instrucciones:
+
+	npm init
+
+Esto generará un archivo package.json interactivo donde puedes proporcionar detalles sobre tu proyecto.
+
+
+
+********** 3 - Instala las dependencias necesarias para configurar el entorno de desarrollo. En este caso, necesitarás instalar Webpack y Babel, que son herramientas comunes para el manejo de módulos y transpilación de código:
+
+
+	npm install --save-dev webpack webpack-cli babel-loader @babel/core @babel/preset-env
+
+Esto instalará las dependencias necesarias en tu proyecto y las guardará en la sección devDependencies de tu archivo package.json.
+
+
+
+********** 4 - Crea un archivo de configuración para Webpack llamado webpack.config.js en la raíz de tu proyecto y configúralo de la siguiente manera:
+
+	const path = require('path');
+
+	module.exports = {
+	  mode: 'development',
+	  entry: './index.js',
+	  output: {
+	    filename: 'bundle.js',
+	    path: path.resolve(__dirname, 'dist'),
+	  },
+	  module: {
+	    rules: [
+	      {
+	        test: /\.js$/,
+      	  exclude: /node_modules/,
+	        use: {
+      	    loader: 'babel-loader',
+	          options: {
+      	      presets: ['@babel/preset-env'],
+	          },
+      	  },
+	      },
+	    ],
+	  },
+	};
+
+Esta configuración establece la entrada (entry) como tu archivo index.js, define la salida (output) en una carpeta llamada dist con un archivo de salida llamado bundle.js, y utiliza Babel para transpilar el código JavaScript utilizando el preset @babel/preset-env.
+
+
+
+********** 5 - Crea un archivo .babelrc en la raíz de tu proyecto y configúralo de la siguiente manera:
+
+	{
+	  "presets": ["@babel/preset-env"],
+	  "plugins": ["@babel/plugin-transform-modules-commonjs"]
+	}
+
+Esta configuración le indica a Babel que utilice el preset @babel/preset-env para transpilar el código JavaScript.
+
+
+
+********** 6 - En tu archivo HTML, actualiza la etiqueta <script> para que apunte al archivo de salida generado por Webpack (bundle.js):
+
+	<!DOCTYPE html>
+	<html>
+	<head>
+	  <title></title>
+	</head>
+	<body>
+	  <script src="dist/bundle.js"></script>
+	</body>
+	</html>
+
+
+
+********** 7 - Crea o actualiza tu archivo index.js con el código utilizando la sintaxis de módulos ES6:
+
+
+	import * as math from 'tu dependencia';
+
+
+********** 8 - Ejecuta el siguiente comando para compilar y generar el archivo de salida utilizando Webpack:
+
+	npx webpack --config webpack.config.js
+
+
+********** 9 - Abre tu archivo HTML en un navegador y verás que ahora se utiliza el archivo bundle.js generado por Webpack, permitiendo que la importación y el código ES6 funcionen correctamente en el navegador.
+
+
+Estos son los pasos básicos para configurar un entorno de desarrollo con Webpack y Babel para utilizar la sintaxis de módulos ES6 con la declaración import en el navegador. Ten en cuenta que esta es solo una configuración básica, y dependiendo de tu proyecto, puedes necesitar ajustar la configuración y agregar más características o complementos según sea necesario.
+
+
+A este punto... 
+Si los cambios que realizas en tu archivo JavaScript no se reflejan automáticamente en el navegador después de modificarlos, es posible que te encuentres en un entorno de desarrollo en el que el "cambio en caliente" (hot reloading) no está configurado.
+
+El "cambio en caliente" permite que los cambios realizados en los archivos se reflejen automáticamente en el navegador sin tener que volver a compilar manualmente cada vez.
+
+
+
+********** 10 - Para habilitar el "cambio en caliente" en tu configuración de Webpack, puedes seguir estos pasos:
+
+
+	npm install --save-dev webpack-dev-server
+
+
+********** 11 - Actualiza tu archivo de configuración de Webpack (webpack.config.js) para agregar la configuración del servidor de desarrollo:
+
+
+const path = require('path');
+
+	module.exports = {
+	  mode: 'development',
+	  entry: './index.js',
+	  output: {
+	    filename: 'bundle.js',
+	    path: path.resolve(__dirname, 'dist'),
+	  },
+	  module: {
+	    rules: [
+	      {
+	        test: /\.js$/,
+	        exclude: /node_modules/,
+	        use: {
+	          loader: 'babel-loader',
+	          options: {
+	            presets: ['@babel/preset-env'],
+	          },
+	        },
+	      },
+	    ],
+	  },
+	  devServer: {
+	    contentBase: path.resolve(__dirname, 'dist'),
+	    hot: true,
+	  },
+	};
+
+La adición de la propiedad devServer con contentBase establece la carpeta base del servidor de desarrollo como dist, donde se encuentra tu archivo bundle.js. La propiedad hot: true habilita el "cambio en caliente".
+
+
+
+********** 12 - En tu archivo package.json, agrega un nuevo script para ejecutar el servidor de desarrollo:
+
+
+	{
+	  "scripts": {
+	    "start": "webpack serve --config webpack.config.js"
+	  }
+	}
+
+
+********** 13 - Ejecuta el siguiente comando para iniciar el servidor de desarrollo:
+
+	npm start
+
+
+
+Esto iniciará el servidor de desarrollo y se abrirá una ventana del navegador con tu aplicación. Ahora, cuando realices cambios en tu archivo JavaScript (index.js), los cambios se reflejarán automáticamente en el navegador sin tener que volver a compilar manualmente.
+
+Ten en cuenta que ahora deberás utilizar la URL proporcionada por el servidor de desarrollo en lugar de abrir directamente el archivo HTML en el navegador. Por ejemplo, la URL puede ser http://localhost:8080.
+
+
+
+	Te va a dar un error como este:
+
+
+===============================================================================================================
+ "[webpack-cli] Invalid options object. Dev Server has been initialized using an options object that does not match the API schema.
+ - options has an unknown property 'contentBase'. These properties are valid:
+   object { allowedHosts?, bonjour?, client?, compress?, devMiddleware?, headers?, historyApiFallback?, host?, hot?, http2?, https?, ipc?, liveReload?, magicHtml?, onAfterSetupMiddleware?, onBeforeSetupMiddleware?, onListening?, open?, port?, proxy?, server?, setupExitSignals?, setupMiddlewares?, static?, watchFiles?, webSocketServer? }"
+===============================================================================================================
+
+El error indica que la propiedad contentBase que estás utilizando en la configuración del servidor de desarrollo de Webpack Dev Server no es válida. Esto se debe a que ha habido cambios en la API de configuración de Webpack Dev Server en las versiones más recientes.
+
+	Para solucionar este problema, puedes utilizar la propiedad static en su lugar.
+
+
+********** 14 - Actualiza tu archivo de configuración de Webpack (webpack.config.js) para utilizar la propiedad static en lugar de contentBase:
+
+
+	const path = require('path');
+
+	module.exports = {
+	  mode: 'development',
+	  entry: './index.js',
+	  output: {
+	    filename: 'bundle.js',
+	    path: path.resolve(__dirname, 'dist'),
+	  },
+	  module: {
+	    rules: [
+	      {
+	        test: /\.js$/,
+	        exclude: /node_modules/,
+      	  use: {
+	          loader: 'babel-loader',
+	          options: {
+      	      presets: ['@babel/preset-env'],
+	          },
+      	  },
+	      },
+	    ],
+	  },
+	  devServer: {
+	    static: {
+	      directory: path.resolve(__dirname, 'dist'),
+	    },
+	    hot: true,
+	  },
+	};
+
+
+********** 15 - Ejecuta nuevamente el comando npm start para iniciar el servidor de desarrollo. 
+Con estos cambios, el servidor de desarrollo debería iniciarse correctamente y reflejar los cambios realizados en tu archivo JavaScript (index.js) automáticamente en el navegador. Pero no te mostrara el archivo index.html
+
+Si deseas que el servidor de desarrollo de Webpack Dev Server también sirva el archivo index.html en lugar de solo mostrar el listado de archivos, puedes realizar los siguientes ajustes:
+
+
+********** 16 - En tu archivo webpack.config.js, agrega la propiedad historyApiFallback al objeto de configuración devServer. Esta propiedad permite redirigir todas las solicitudes que no se correspondan con archivos existentes a un archivo específico, como index.html:
+
+
+	const path = require('path');
+
+	module.exports = {
+	  // ...otras configuraciones...
+	
+	  devServer: {
+	    // ...otras opciones...
+	
+	    historyApiFallback: true,
+	  },
+	};
+
+Asegúrate de que el archivo index.html se encuentre en el directorio dist junto con el archivo bundle.js. Si no está allí, cópialo manualmente o configura tu proceso de construcción para copiarlo automáticamente.
+
+Después de realizar estos cambios, reinicia el servidor de desarrollo con el comando npm start y abre el navegador en http://localhost:8080/. Ahora, en lugar de mostrar solo el listado de archivos, Webpack Dev Server debería servir el archivo index.html y cargar la aplicación desde ese punto.
+
+
+
+
+
+
+==============================================================================================================
+********** 17 - Documentos base finalizados: 
+==============================================================================================================
+
+===== SECCION scripts DEL ARCHIVO package.json:
+
+
+
+	"scripts": {
+	    "start": "webpack serve --config webpack.config.js",
+	    "test": "echo \"Error: no test specified\" && exit 1"
+	},
+
+
+
+===== DOCUMENTO .babelrc:
+
+
+
+	{
+	  "presets": ["@babel/preset-env"],
+	  "plugins": ["@babel/plugin-transform-modules-commonjs"]
+	}
+
+
+
+===== DOCUMENTO webpack.config.js:
+
+
+
+	const path = require('path');
+	
+	module.exports = {
+	  mode: 'development',
+	  entry: './index.js',
+	  output: {
+	    filename: 'bundle.js',
+	    path: path.resolve(__dirname, 'dist'),
+	  },
+	  module: {
+	    rules: [
+	      {
+	        test: /\.js$/,
+	        exclude: /node_modules/,
+	        use: {
+	          loader: 'babel-loader',
+	          options: {
+	            presets: ['@babel/preset-env'],
+	          },
+	        },
+	      },
+	    ],
+	  },
+	  devServer: {
+	    static: {
+	      directory: path.resolve(__dirname, 'dist'),
+	    },
+	    hot: true,
+	    historyApiFallback: true,
+	  },
+	  stats: 'errors-only',
+	};
+
+
+
+***** TODOS LOS npm install
+
+	npm install webpack webpack-cli webpack-dev-server babel-loader @babel/core @babel/preset-env --save-dev
+
+
+
+
+
+
+
+
+
+
+
+
